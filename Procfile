@@ -1,2 +1,2 @@
-release: FLASK_APP=run.py flask db upgrade && flask create-admin "admin@example.com" "Admin123!"
+release:flask db upgrade
 web: gunicorn wsgi:app

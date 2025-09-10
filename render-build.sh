@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "Installing deps…"
+echo "Installing deps..."
 pip install -r requirements.txt
 
-echo "Running DB migrations…"
-# Render sets DATABASE_URL; Flask picks it up in create_app()
-# Ensure Flask knows where the app is:
+echo "Running DB migrations..."
+# Render sets DATABASE_URL for you; create_app() reads it.
+# Tell Flask where the app is for cli commands:
 export FLASK_APP=wsgi.py
 flask db upgrade
 
-echo "Creating admin (idempotent)…"
+echo "Creating admin (idempotent)..."
 python - <<'PY'
+from werkzeug.security import generate_password_hash
 from app import create_app, db
 from app.models import User
-from werkzeug.security import generate_password_hash
 
 app = create_app()
 with app.app_context():
 email = "admin@example.com"
 password = "Admin123!"
+
 user = User.query.filter_by(email=email).first()
 if user:
 print("Admin already exists:", email)

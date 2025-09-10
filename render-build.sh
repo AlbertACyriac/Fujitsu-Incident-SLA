@@ -1,36 +1,29 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-echo "===== Install deps ====="
+echo "Installing deps…"
 pip install -r requirements.txt
 
-echo "===== Run DB migrations ====="
+echo "Running DB migrations…"
 flask db upgrade
 
-echo "===== Create admin user (idempotent) ====="
+echo "Creating admin (idempotent)…"
 python - <<'PY'
 from app import create_app, db
 from app.models import User
 from werkzeug.security import generate_password_hash
 
 app = create_app()
-
 with app.app_context():
 email = "admin@example.com"
 pwd = "Admin123!"
-user = User.query.filter_by(email=email).first()
-if not user:
-user = User(
-name="Admin",
-email=email,
-role="admin",
-password_hash=generate_password_hash(pwd)
-)
-db.session.add(user)
+u = User.query.filter_by(email=email).first()
+if not u:
+u = User(name="Admin", email=email, role="admin",
+password_hash=generate_password_hash(pwd))
+db.session.add(u)
 db.session.commit()
-print("Admin created:", email, "password:", pwd)
+print("Admin created:", email)
 else:
-print("User already exists:", email)
+print("Admin already exists")
 PY
-
-echo "===== build step finished ====="

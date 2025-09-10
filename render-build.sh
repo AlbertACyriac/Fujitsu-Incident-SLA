@@ -5,6 +5,9 @@ echo "Installing deps…"
 pip install -r requirements.txt
 
 echo "Running DB migrations…"
+# Render sets DATABASE_URL; Flask picks it up in create_app()
+# Ensure Flask knows where the app is:
+export FLASK_APP=wsgi.py
 flask db upgrade
 
 echo "Creating admin (idempotent)…"
@@ -22,10 +25,10 @@ if user:
 print("Admin already exists:", email)
 else:
 user = User(
-name="Service Manager",
+name="Admin",
 email=email,
 role="admin",
-password_hash=generate_password_hash(password)
+password_hash=generate_password_hash(password),
 )
 db.session.add(user)
 db.session.commit()

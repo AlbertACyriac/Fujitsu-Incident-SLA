@@ -24,3 +24,11 @@ This project is designed to demonstrate database integration, authentication, an
 ---
 
 ## Project Structure
+fujitsu-incident-sla/
+│── app/ # Flask app with routes, models, blueprints
+│── migrations/ # Database migrations
+│── templates/ # HTML templates (Jinja2)
+│── requirements.txt # Python dependencies
+│── Procfile # Deployment entry point
+│── run.py # Development entry point
+│── wsgi.py # Production entry point

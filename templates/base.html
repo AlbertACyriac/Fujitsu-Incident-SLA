@@ -1,0 +1,85 @@
+k<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}Fujitsu Tracker{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (for simple icons on the cards) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body { background: #f8fafc; }
+    .navbar { background: #fff; }
+    .hero {
+      padding: 3rem 0 2rem;
+    }
+    .hero h1 {
+      font-weight: 700; letter-spacing: .3px;
+    }
+    .hero p.lead {
+      color: #5b6876;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      transition: transform .15s ease, box-shadow .15s ease;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,.08);
+    }
+    .flash-wrap { position: relative; top: .75rem; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg border-bottom mb-3">
+  <div class="container">
+    <a class="navbar-brand fw-semibold" href="{{ url_for('main.index') }}">Fujitsu Tracker</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('clients.index') }}">Clients</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('slas.index') }}">SLAs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('incidents.index') }}">Incidents</a></li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-2">
+        {% if current_user.is_authenticated %}
+          <span class="text-secondary small">
+            <strong>{{ current_user.name }}</strong> ({{ current_user.role }})
+          </span>
+          <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('auth.logout') }}">Logout</a>
+        {% else %}
+          <a class="btn btn-primary btn-sm" href="{{ url_for('auth.login') }}">Login</a>
+          <a class="btn btn-outline-primary btn-sm" href="{{ url_for('auth.register') }}">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container flash-wrap">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% if msgs %}
+      <div class="mb-3">
+        {% for category, m in msgs %}
+          <div class="alert alert-{{ 'warning' if category=='danger' else category }} alert-dismissible fade show" role="alert">
+            {{ m }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+</div>
+
+<!-- Main content -->
+<div class="container mb-5">
+  {% block content %}{% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,58 @@
+k{% extends "base.html" %}
+
+{% block title %}Incidents{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Incidents</h3>
+    <a class="btn btn-primary btn-sm" href="{{ url_for('incidents.create') }}">+ New Incident</a>
+  </div>
+
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Client</th>
+        <th>SLA</th>
+        <th>Priority</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inc in incidents %}
+      <tr>
+        <td>{{ inc.id }}</td>
+        <td>{{ inc.title }}</td>
+        <td>{{ inc.client.name if inc.client else "—" }}</td>
+        <td>{{ inc.sla.name if inc.sla else "—" }}</td>
+        <td>{{ inc.priority }}</td>
+        <td>{{ inc.status }}</td>
+        <td>{{ inc.created_at.strftime("%Y-%m-%d %H:%M") if inc.created_at else "" }}</td>
+        <td class="text-end">
+          <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('incidents.edit', id=inc.id) }}">Edit</a>
+          <form class="d-inline" method="post"
+                action="{{ url_for('incidents.delete', id=inc.id) }}"
+                onsubmit="return confirmDelete('incident');">
+            <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="text-center text-muted">No incidents yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function confirmDelete(kind) {
+    return confirm(`Are you sure you want to permanently delete this ${kind}?`);
+  }
+</script>
+{% endblock %}
+

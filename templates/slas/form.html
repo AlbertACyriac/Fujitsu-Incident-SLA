@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit SLA' if sla else 'New SLA' }}{% endblock %}
+{% block content %}
+<div class="container py-3" style="max-width: 640px;">
+  <h3 class="mb-3">{{ 'Edit SLA' if sla else 'New SLA' }}</h3>
+  <form method="post">
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input class="form-control" name="name" value="{{ sla.name if sla else '' }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Target response (mins)</label>
+      <input class="form-control" type="number" name="target_response_mins" value="{{ sla.target_response_mins if sla else '' }}" min="0" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Target resolve (mins)</label>
+      <input class="form-control" type="number" name="target_resolve_mins" value="{{ sla.target_resolve_mins if sla else '' }}" min="0" required>
+    </div>
+    <button class="btn btn-primary">Save</button>
+    <a class="btn btn-link" href="{{ url_for('slas.index') }}">Cancel</a>
+  </form>
+</div>
+{% endblock %}
+
+

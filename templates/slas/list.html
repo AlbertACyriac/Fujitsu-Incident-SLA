@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}SLAs{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">SLAs</h3>
+    {% if current_user.is_admin %}
+      <a class="btn btn-primary btn-sm" href="{{ url_for('slas.create') }}">+ New SLA</a>
+    {% endif %}
+  </div>
+
+  <table class="table table-sm align-middle">
+    <thead>
+      <tr><th>ID</th><th>Name</th><th>Target Response (mins)</th><th>Target Resolve (mins)</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for s in slas %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.target_response_mins }}</td>
+        <td>{{ s.target_resolve_mins }}</td>
+        <td class="text-end">
+          {% if current_user.is_admin %}
+            <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('slas.edit', id=s.id) }}">Edit</a>
+            <form class="d-inline" method="post"
+                  action="{{ url_for('slas.delete', id=s.id) }}"
+                  onsubmit="return confirmDelete('SLA');">
+              <button class="btn btn-outline-danger btn-sm" type="submit">Delete</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function confirmDelete(kind) {
+    return confirm(`Are you sure you want to permanently delete this ${kind}?`);
+  }
+</script>
+{% endblock %}
+

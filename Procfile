@@ -1,2 +1,2 @@
-release: bash scripts/rlease.sh
+release: python -m scripts.release
 web: gunicorn wsgi:app
